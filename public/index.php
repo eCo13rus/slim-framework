@@ -4,7 +4,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use Slim\Factory\AppFactory;
 
-$companies = [1, 2, 5, 6, 8, 54, 76];
+
 
 
 $app = AppFactory::create();
