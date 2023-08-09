@@ -25,6 +25,4 @@ $app->get('/companies', function ($request, $response) use ($companies) {
     return $response->write(json_encode($slicedCompanies));
 });
 
-
-
 $app->run();
