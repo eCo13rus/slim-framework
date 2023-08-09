@@ -7,9 +7,11 @@ use Slim\Factory\AppFactory;
 $app = AppFactory::create();
 $app->addErrorMiddleware(true, true, true);
 
-$app->get('/', function ($request, $response) {
-    $response->getBody()->write('Welcome to slim!');
+$app->get('/users', function ($request, $response) {
+    $response->getBody()->write('GET /users');
     return $response;
 });
+
+
 
 $app->run();
