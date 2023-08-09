@@ -8,7 +8,7 @@ $app = AppFactory::create();
 $app->addErrorMiddleware(true, true, true);
 
 $app->get('/', function ($request, $response) {
-    $response->getBody()->write('Welcome to slim!!');
+    $response->getBody()->write('Welcome to slim!');
     return $response;
 });
 
