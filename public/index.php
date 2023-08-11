@@ -5,60 +5,98 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use Slim\Factory\AppFactory;
 use DI\Container;
 
-$companies = [
-    'Apple Inc.',
-    'Microsoft Corporation',
-    'Amazon.com Inc.',
-    'Google LLC (Alphabet Inc.)',
-    'Facebook Inc. (Meta Platforms Inc.)',
-    'Tesla Inc.',
-    'IBM Corporation',
-    'Samsung Electronics Co. Ltd.',
-    'General Electric Company (GE)',
-    'Ford Motor Company'
-];
+// Для Компаний
 
-$app = AppFactory::create();
-$app->addErrorMiddleware(true, true, true);
+// $companies = [
+//     'Apple Inc.',
+//     'Microsoft Corporation',
+//     'Amazon.com Inc.',
+//     'Google LLC (Alphabet Inc.)',
+//     'Facebook Inc. (Meta Platforms Inc.)',
+//     'Tesla Inc.',
+//     'IBM Corporation',
+//     'Samsung Electronics Co. Ltd.',
+//     'General Electric Company (GE)',
+//     'Ford Motor Company'
+// ];
 
-$app->get('/companies', function ($request, $response) use ($companies) {
-    $page = $request->getQueryParam('page', 1);
-    $per = $request->getQueryParam('per', 3);
+// $app = AppFactory::create();
+// $app->addErrorMiddleware(true, true, true);
 
-    $start = ($page - 1) * $per;
-    $slicedCompanies = array_slice($companies, $start, $per);
+
+// $app->get('/companies', function ($request, $response) use ($companies) {
+//     $page = $request->getQueryParam('page', 1);
+//     $per = $request->getQueryParam('per', 2);
+
+//     $start = ($page - 1) * $per;
+//     $slicedCompanies = array_slice($companies, $start, $per);
     
-    return $response->write(json_encode($slicedCompanies));
-});
-
-$container = new Container();
-$container->set('renderer', function () {
-    return new \Slim\Views\PhpRenderer(__DIR__ . '/../templates');
-});
-
-$app = AppFactory::createFromContainer($container);
-$app->addErrorMiddleware(true, true, true);
-
-$app->get('/users/{id}', function ($request, $response, $args) {
-    $params = ['id' => $args['id'], 'nickname' => 'user-' . $args['id']];
-    return $this->get('renderer')->render($response, 'users/show.phtml', $params);
-});
-
-$courses = [
-    ['id' => 1, 'name' => 'Курс PHP'],
-    ['id' => 2, 'name' => 'Курс JavaScript'],
-];
-
-$app->get('/courses', function ($request, $response) use ($courses) {
-    $params = [
-        'courses' => $courses
-    ];
-    return $this->get('renderer')->render($response, 'courses/index.phtml', $params);
-});
+//     return $response->write(json_encode($slicedCompanies));
+// });
 
 
 
 
+
+
+// Для id и nickname
+
+// $container = new Container();
+// $container->set('renderer', function () {
+//     return new \Slim\Views\PhpRenderer(__DIR__ . '/../templates');
+// });
+// $app = AppFactory::createFromContainer($container);
+// $app->addErrorMiddleware(true, true, true);
+
+// $app->get('/users/{id}', function ($request, $response, $args) {
+//     $params = ['id' => $args['id'], 'nickname' => 'user-' . $args['id']];
+//     return $this->get('renderer')->render($response, 'users/show.phtml', $params);
+// });
+
+
+
+
+
+
+// Для Курсов
+
+// $container = new Container();
+// $container->set('renderer', function () {
+//     return new \Slim\Views\PhpRenderer(__DIR__ . '/../templates');
+// });
+
+// $courses = [
+// ['id' => 1, 'name' => 'Курс PHP'],
+// ['id' => 2, 'name' => 'Курс JavaScript'],
+    
+// ];
+
+// $app = AppFactory::createFromContainer($container);
+// $app->get('/courses/{id}', function ($request, $response, array $args) {
+//     $id = $args['id'];
+//     return $response->write("Courses id: {$id}");
+// });
+
+// $app->get('/courses', function ($request, $response) use ($courses) {
+//     $params = [
+//         'courses' => $courses
+//     ];
+//     return $this->get('renderer')->render($response, 'courses/index.phtml', $params);
+// });
+
+
+
+
+
+// Для пользователей и погоды
+
+// $container = new Container();
+// $container->set('renderer', function () {
+//     return new \Slim\Views\PhpRenderer(__DIR__ . '/../templates');
+// });
+
+// $app = AppFactory::createFromContainer($container);
+// $app->addErrorMiddleware(true, true, true);
 
 // $app->get('/', function ($request, $response) {
 //     return $this->get('renderer')->render($response, 'index.phtml');
