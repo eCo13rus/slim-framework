@@ -1,9 +1,19 @@
-<h1>Добро пожаловать!</h1>
+<a href="/users">Все Пользователи</a>
 
-<p><a href="/users">Посмотреть список пользователей</a></p>
 <h1>Список пользователей</h1>
-<ul>
-    <?php foreach ($users as $user): ?>
-        <li><a href="/users/<?= $user['id'] ?>"><?= $user['id'] ?>. <?= $user['firstName'] ?> <?= $user['lastName'] ?></a></li>
-    <?php endforeach ?>
-</ul>
+
+<form action="/users" method="get">
+    <label for="term">Поиск по имени:</label>
+    <input type="text" name="term" id="term" value="<?= $term ?>">
+    <button type="submit">Поиск</button>
+</form>
+
+<?php if (!empty($users)): ?>
+    <ul>
+        <?php foreach ($users as $user): ?>
+            <li><?= htmlspecialchars($user['firstName']) ?></li>
+        <?php endforeach ?>
+    </ul>
+<?php else: ?>
+    <p>Пользователи не найдены.</p>
+<?php endif; ?>

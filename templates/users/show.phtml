@@ -4,6 +4,9 @@
 
 
 
+
+
+
 <a href="/users">Пользователи</a>
 
 <h1>Информация о пользователе</h1>
@@ -14,3 +17,18 @@
 <?php if (isset($user['temperature'])): ?>
     <p>Температура в городе: <?= $user['temperature'] ?>°C</p>
 <?php endif; ?>
+
+
+
+
+
+
+<h1>Добро пожаловать!</h1>
+
+<p><a href="/users">Посмотреть список пользователей</a></p>
+<h1>Список пользователей</h1>
+<ul>
+    <?php foreach ($users as $user): ?>
+        <li><a href="/users/<?= $user['id'] ?>"><?= $user['id'] ?>. <?= $user['firstName'] ?> <?= $user['lastName'] ?></a></li>
+    <?php endforeach ?>
+</ul>

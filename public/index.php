@@ -61,6 +61,8 @@ use DI\Container;
 // Для Курсов
 
 // $container = new Container();
+// $app = AppFactory::createFromContainer($container);
+
 // $container->set('renderer', function () {
 //     return new \Slim\Views\PhpRenderer(__DIR__ . '/../templates');
 // });
@@ -68,10 +70,9 @@ use DI\Container;
 // $courses = [
 // ['id' => 1, 'name' => 'Курс PHP'],
 // ['id' => 2, 'name' => 'Курс JavaScript'],
-    
 // ];
 
-// $app = AppFactory::createFromContainer($container);
+
 // $app->get('/courses/{id}', function ($request, $response, array $args) {
 //     $id = $args['id'];
 //     return $response->write("Courses id: {$id}");
@@ -158,5 +159,43 @@ use DI\Container;
 //     $params = ['user' => $user];
 //     return $this->get('renderer')->render($response, 'users/show.phtml', $params);
 // });
+
+
+
+
+
+// Поиск и вывод Users
+
+$container = new Container();
+$container->set('renderer', function () {
+    return new \Slim\Views\PhpRenderer(__DIR__ . '/../templates');
+});
+
+$app = AppFactory::createFromContainer($container);
+$app->addErrorMiddleware(true, true, true);
+
+$users = [
+    ['id' => 1, 'firstName' => 'Олег', 'lastName' => 'Баулин', 'email' => 'oleg@example.com'],
+    ['id' => 2, 'firstName' => 'Илья', 'lastName' => 'Широков', 'email' => 'ilya@example.com'],
+    ['id' => 3, 'firstName' => 'Мария', 'lastName' => 'Петрова', 'email' => 'maria@example.com'],
+    ['id' => 4, 'firstName' => 'Анна', 'lastName' => 'Сидорова', 'email' => 'anna@example.com'],
+    ['id' => 5, 'firstName' => 'Алексей', 'lastName' => 'Иванов', 'email' => 'alexey@example.com'],
+];
+
+
+$app->get('/users', function ($request, $response) use ($users) {
+    $term = $request->getQueryParam('term', '');
+
+    $filteredUsers = array_filter($users, function ($user) use ($term) {
+        return str_starts_with(mb_strtolower($user['firstName']), mb_strtolower($term));
+    });
+
+    $params = [
+        'users' => $filteredUsers,
+        'term' => $term
+    ];
+    
+    return $this->get('renderer')->render($response, 'users/index.phtml', $params);
+});
 
 $app->run();
