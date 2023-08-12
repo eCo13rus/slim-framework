@@ -182,20 +182,25 @@ $users = [
     ['id' => 5, 'firstName' => 'Алексей', 'lastName' => 'Иванов', 'email' => 'alexey@example.com'],
 ];
 
-
 $app->get('/users', function ($request, $response) use ($users) {
-    $term = $request->getQueryParam('term', '');
+    $params = [
+        'users' => $users
+    ];
+    return $this->get('renderer')->render($response, 'users/index.phtml', $params);
+});
 
+$app->get('/api/users', function ($request, $response) use ($users) {
+    $term = $request->getQueryParam('term', '');
     $filteredUsers = array_filter($users, function ($user) use ($term) {
         return str_starts_with(mb_strtolower($user['firstName']), mb_strtolower($term));
     });
 
-    $params = [
-        'users' => $filteredUsers,
-        'term' => $term
+    $result = [
+        'users' => array_values($filteredUsers)
     ];
-    
-    return $this->get('renderer')->render($response, 'users/index.phtml', $params);
+
+    $response->getBody()->write(json_encode($result));
+    return $response->withHeader('Content-Type', 'application/json');
 });
 
 $app->run();

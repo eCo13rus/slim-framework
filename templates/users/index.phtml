@@ -1,19 +1,38 @@
-<a href="/users">Все Пользователи</a>
-
-<h1>Список пользователей</h1>
-
-<form action="/users" method="get">
-    <label for="term">Поиск по имени:</label>
-    <input type="text" name="term" id="term" value="<?= $term ?>">
-    <button type="submit">Поиск</button>
-</form>
-
-<?php if (!empty($users)): ?>
-    <ul>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Живой Поиск</title>
+</head>
+<body>
+    <a href="/users">Все Пользователи</a>
+    <br>
+    <br>
+    <input type="text" id="searchTerm" placeholder="Поиск по имени">
+    <ul id="userList">
         <?php foreach ($users as $user): ?>
             <li><?= htmlspecialchars($user['firstName']) ?></li>
         <?php endforeach ?>
     </ul>
-<?php else: ?>
-    <p>Пользователи не найдены.</p>
-<?php endif; ?>
+
+    <script>
+        document.getElementById('searchTerm').addEventListener('input', function(e) {
+            var term = e.target.value;
+            fetch('/api/users?term=' + term)
+                .then(response => response.json())
+                .then(data => {
+                    var userList = document.getElementById('userList');
+                    userList.innerHTML = '';
+                    data.users.forEach(user => {
+                        var li = document.createElement('li');
+                        li.textContent = user.firstName;
+                        userList.appendChild(li);
+                    });
+                });
+        });
+    </script>
+</body>
+</html>
+
