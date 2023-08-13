@@ -166,41 +166,104 @@ use DI\Container;
 
 // Поиск и вывод Users
 
-$container = new Container();
-$container->set('renderer', function () {
-    return new \Slim\Views\PhpRenderer(__DIR__ . '/../templates');
+// $container = new Container();
+// $container->set('renderer', function () {
+//     return new \Slim\Views\PhpRenderer(__DIR__ . '/../templates');
+// });
+
+// $app = AppFactory::createFromContainer($container);
+// $app->addErrorMiddleware(true, true, true);
+
+// $users = [
+//     ['id' => 1, 'firstName' => 'Олег', 'lastName' => 'Баулин', 'email' => 'oleg@example.com'],
+//     ['id' => 2, 'firstName' => 'Илья', 'lastName' => 'Широков', 'email' => 'ilya@example.com'],
+//     ['id' => 3, 'firstName' => 'Мария', 'lastName' => 'Петрова', 'email' => 'maria@example.com'],
+//     ['id' => 4, 'firstName' => 'Анна', 'lastName' => 'Сидорова', 'email' => 'anna@example.com'],
+//     ['id' => 5, 'firstName' => 'Алексей', 'lastName' => 'Иванов', 'email' => 'alexey@example.com'],
+// ];
+
+// $app->get('/users', function ($request, $response) use ($users) {
+//     $params = [
+//         'users' => $users
+//     ];
+//     return $this->get('renderer')->render($response, 'users/index.phtml', $params);
+// });
+
+// $app->get('/api/users', function ($request, $response) use ($users) {
+//     $term = $request->getQueryParam('term', '');
+//     $filteredUsers = array_filter($users, function ($user) use ($term) {
+//         return str_starts_with(mb_strtolower($user['firstName']), mb_strtolower($term));
+//     });
+
+//     $result = [
+//         'users' => array_values($filteredUsers)
+//     ];
+
+//     $response->getBody()->write(json_encode($result));
+//     return $response->withHeader('Content-Type', 'application/json');
+// });
+
+$config = require_once __DIR__ . "/../config.php";
+
+$capsule->addConnection($config['db']);
+$capsule->setAsGlobal();
+$capsule->bootEloquent();
+
+$app->post('/users', function ($request, $response) {
+    $data = $request->getParsedBody();
+
+    $user = new \Models\User([
+        'firstName' => $data['firstName'],
+        'lastName' => $data['lastName'],
+        'email' => $data['email'],
+        'password' => password_hash($data['password'], PASSWORD_DEFAULT),
+        'city' => $data['city']
+    ]);
+
+    $user->save();
+
+    return $response->withJson($user, 201);
 });
 
-$app = AppFactory::createFromContainer($container);
-$app->addErrorMiddleware(true, true, true);
-
-$users = [
-    ['id' => 1, 'firstName' => 'Олег', 'lastName' => 'Баулин', 'email' => 'oleg@example.com'],
-    ['id' => 2, 'firstName' => 'Илья', 'lastName' => 'Широков', 'email' => 'ilya@example.com'],
-    ['id' => 3, 'firstName' => 'Мария', 'lastName' => 'Петрова', 'email' => 'maria@example.com'],
-    ['id' => 4, 'firstName' => 'Анна', 'lastName' => 'Сидорова', 'email' => 'anna@example.com'],
-    ['id' => 5, 'firstName' => 'Алексей', 'lastName' => 'Иванов', 'email' => 'alexey@example.com'],
-];
-
-$app->get('/users', function ($request, $response) use ($users) {
-    $params = [
-        'users' => $users
-    ];
-    return $this->get('renderer')->render($response, 'users/index.phtml', $params);
+$app->get('/users', function ($request, $response) {
+    $users = \Models\User::all();
+    return $response->withJson($users);
 });
 
-$app->get('/api/users', function ($request, $response) use ($users) {
-    $term = $request->getQueryParam('term', '');
-    $filteredUsers = array_filter($users, function ($user) use ($term) {
-        return str_starts_with(mb_strtolower($user['firstName']), mb_strtolower($term));
-    });
-
-    $result = [
-        'users' => array_values($filteredUsers)
-    ];
-
-    $response->getBody()->write(json_encode($result));
-    return $response->withHeader('Content-Type', 'application/json');
+$app->get('/users/{id}', function ($request, $response, $args) {
+    $user = \Models\User::find($args['id']);
+    return $response->withJson($user);
 });
+
+$app->put('/users/{id}', function ($request, $response, $args) {
+    $data = $request->getParsedBody();
+    $user = \Models\User::find($args['id']);
+    $user->update($data);
+    return $response->withJson($user);
+});
+
+$app->delete('/users/{id}', function ($request, $response, $args) {
+    $user = \Models\User::find($args['id']);
+    $user->delete();
+    return $response->withStatus(204);
+});
+
+
+
+$app->post('/slim-framework/login', function ($request, $response) {
+    $data = $request->getParsedBody();
+
+    if (empty($data['firstName']) || empty($data['lastName']) || !filter_var($data['email'], FILTER_VALIDATE_EMAIL) || empty($data['password']) || empty($data['city'])) {
+        return $response->withStatus(400)->write('Неверные данные');
+    }
+
+    $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+
+    $user = new \Models\User($data);
+    $user->save();
+
+    return $response->withRedirect('/');
+});
+
 
 $app->run();
