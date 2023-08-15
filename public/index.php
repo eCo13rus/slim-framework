@@ -23,7 +23,6 @@ use DI\Container;
 // $app = AppFactory::create();
 // $app->addErrorMiddleware(true, true, true);
 
-
 // $app->get('/companies', function ($request, $response) use ($companies) {
 //     $page = $request->getQueryParam('page', 1);
 //     $per = $request->getQueryParam('per', 2);
@@ -45,6 +44,7 @@ use DI\Container;
 // $container->set('renderer', function () {
 //     return new \Slim\Views\PhpRenderer(__DIR__ . '/../templates');
 // });
+
 // $app = AppFactory::createFromContainer($container);
 // $app->addErrorMiddleware(true, true, true);
 
@@ -91,74 +91,74 @@ use DI\Container;
 
 // Для пользователей и погоды
 
-$container = new Container();
-$container->set('renderer', function () {
-    return new \Slim\Views\PhpRenderer(__DIR__ . '/../templates');
-});
+// $container = new Container();
+// $container->set('renderer', function () {
+//     return new \Slim\Views\PhpRenderer(__DIR__ . '/../templates');
+// });
 
-$app = AppFactory::createFromContainer($container);
-$app->addErrorMiddleware(true, true, true);
+// $app = AppFactory::createFromContainer($container);
+// $app->addErrorMiddleware(true, true, true);
 
-$app->get('/', function ($request, $response) {
-    return $this->get('renderer')->render($response, 'index.phtml');
-});
+// $app->get('/', function ($request, $response) {
+//     return $this->get('renderer')->render($response, 'index.phtml');
+// });
 
-$users = [
-    ['id' => 1, 'firstName' => 'Олег', 'lastName' => 'Баулин', 'email' => 'alice.johnson@example.com', 'city' => 'Саранск'],
-    ['id' => 2, 'firstName' => 'Илья', 'lastName' => 'Широков', 'email' => 'hannah.taylor@example.com', 'city' => 'Москва'],
-    ['id' => 3, 'firstName' => 'Charlie', 'lastName' => 'Brown', 'email' => 'charlie.brown@example.com', 'city' => 'Новосибирск'],
-    ['id' => 4, 'firstName' => 'David', 'lastName' => 'Lee', 'email' => 'david.lee@example.com', 'city' => 'Екатеринбург'],
-    ['id' => 5, 'firstName' => 'Emily', 'lastName' => 'Davis', 'email' => 'emily.davis@example.com', 'city' => 'Казань'],
-    ['id' => 6, 'firstName' => 'Frank', 'lastName' => 'Miller', 'email' => 'frank.miller@example.com', 'city' => 'Нижний Новгород'],
-    ['id' => 7, 'firstName' => 'Grace', 'lastName' => 'Wilson', 'email' => 'grace.wilson@example.com', 'city' => 'Самара'],
-    ['id' => 8, 'firstName' => 'Bob', 'lastName' => 'Smith', 'email' => 'bob.smith@example.com', 'city' => 'Санкт-Петербург'],
-    ['id' => 9, 'firstName' => 'Ivan', 'lastName' => 'Anderson', 'email' => 'ivan.anderson@example.com', 'city' => 'Владивосток'],
-    ['id' => 10, 'firstName' => 'Jack', 'lastName' => 'Thomas', 'email' => 'jack.thomas@example.com', 'city' => 'Киров'],
-    ['id' => 11, 'firstName' => 'Kate', 'lastName' => 'Jackson', 'email' => 'kate.jackson@example.com', 'city' => 'Сызрань'],
-    ['id' => 12, 'firstName' => 'Luke', 'lastName' => 'Harris', 'email' => 'luke.harris@example.com', 'city' => 'Кострома'],
-    ['id' => 13, 'firstName' => 'Megan', 'lastName' => 'Clark', 'email' => 'megan.clark@example.com', 'city' => 'Уссурийск'],
-    ['id' => 14, 'firstName' => 'Nathan', 'lastName' => 'Lewis', 'email' => 'nathan.lewis@example.com', 'city' => 'Саратов'],
-    ['id' => 15, 'firstName' => 'Olivia', 'lastName' => 'Walker', 'email' => 'olivia.walker@example.com', 'city' => 'Рязань'],
-];
+// $users = [
+//     ['id' => 1, 'firstName' => 'Олег', 'lastName' => 'Баулин', 'email' => 'alice.johnson@example.com', 'city' => 'Саранск'],
+//     ['id' => 2, 'firstName' => 'Илья', 'lastName' => 'Широков', 'email' => 'hannah.taylor@example.com', 'city' => 'Москва'],
+//     ['id' => 3, 'firstName' => 'Charlie', 'lastName' => 'Brown', 'email' => 'charlie.brown@example.com', 'city' => 'Новосибирск'],
+//     ['id' => 4, 'firstName' => 'David', 'lastName' => 'Lee', 'email' => 'david.lee@example.com', 'city' => 'Екатеринбург'],
+//     ['id' => 5, 'firstName' => 'Emily', 'lastName' => 'Davis', 'email' => 'emily.davis@example.com', 'city' => 'Казань'],
+//     ['id' => 6, 'firstName' => 'Frank', 'lastName' => 'Miller', 'email' => 'frank.miller@example.com', 'city' => 'Нижний Новгород'],
+//     ['id' => 7, 'firstName' => 'Grace', 'lastName' => 'Wilson', 'email' => 'grace.wilson@example.com', 'city' => 'Самара'],
+//     ['id' => 8, 'firstName' => 'Bob', 'lastName' => 'Smith', 'email' => 'bob.smith@example.com', 'city' => 'Санкт-Петербург'],
+//     ['id' => 9, 'firstName' => 'Ivan', 'lastName' => 'Anderson', 'email' => 'ivan.anderson@example.com', 'city' => 'Владивосток'],
+//     ['id' => 10, 'firstName' => 'Jack', 'lastName' => 'Thomas', 'email' => 'jack.thomas@example.com', 'city' => 'Киров'],
+//     ['id' => 11, 'firstName' => 'Kate', 'lastName' => 'Jackson', 'email' => 'kate.jackson@example.com', 'city' => 'Сызрань'],
+//     ['id' => 12, 'firstName' => 'Luke', 'lastName' => 'Harris', 'email' => 'luke.harris@example.com', 'city' => 'Кострома'],
+//     ['id' => 13, 'firstName' => 'Megan', 'lastName' => 'Clark', 'email' => 'megan.clark@example.com', 'city' => 'Уссурийск'],
+//     ['id' => 14, 'firstName' => 'Nathan', 'lastName' => 'Lewis', 'email' => 'nathan.lewis@example.com', 'city' => 'Саратов'],
+//     ['id' => 15, 'firstName' => 'Olivia', 'lastName' => 'Walker', 'email' => 'olivia.walker@example.com', 'city' => 'Рязань'],
+// ];
 
-function getTemperatureForCity($cityName) {
-    $apiKey = 'daba050dbf211828ed62d50ebd2cedad';
-    $apiUrl = "http://api.openweathermap.org/data/2.5/weather?q={$cityName}&appid={$apiKey}&units=metric";
-    $weatherData = file_get_contents($apiUrl);
-    $weatherArray = json_decode($weatherData, true);
+// function getTemperatureForCity($cityName) {
+//     $apiKey = 'daba050dbf211828ed62d50ebd2cedad';
+//     $apiUrl = "http://api.openweathermap.org/data/2.5/weather?q={$cityName}&appid={$apiKey}&units=metric";
+//     $weatherData = file_get_contents($apiUrl);
+//     $weatherArray = json_decode($weatherData, true);
 
-    if (isset($weatherArray['main']['temp'])) {
-        return $weatherArray['main']['temp'];
-    } else {
-        return "Не удалось получить температуру для города {$cityName}";
-    }
-}
+//     if (isset($weatherArray['main']['temp'])) {
+//         return $weatherArray['main']['temp'];
+//     } else {
+//         return "Не удалось получить температуру для города {$cityName}";
+//     }
+// }
 
-$app->get('/users', function ($request, $response) use ($users) {
-    $params = ['users' => $users];
-    return $this->get('renderer')->render($response, 'users/index.phtml', $params);
-});
+// $app->get('/users', function ($request, $response) use ($users) {
+//     $params = ['users' => $users];
+//     return $this->get('renderer')->render($response, 'users/index.phtml', $params);
+// });
 
-$app->get('/users/{id}', function ($request, $response, $args) use ($users) {
-    $id = (int) $args['id'];
-    $user = array_filter($users, function ($user) use ($id) {
-        return $user['id'] === $id;
-    });
+// $app->get('/users/{id}', function ($request, $response, $args) use ($users) {
+//     $id = (int) $args['id'];
+//     $user = array_filter($users, function ($user) use ($id) {
+//         return $user['id'] === $id;
+//     });
 
-    if (empty($user)) {
-        return $response->withStatus(404)->write('User not found');
-    }
+//     if (empty($user)) {
+//         return $response->withStatus(404)->write('User not found');
+//     }
 
-    $user = reset($user);
-    $cityName = $user['city'] ?? null;
-    if ($cityName) {
-        $temperature = getTemperatureForCity($cityName);
-        $user['temperature'] = $temperature;
-    }
+//     $user = reset($user);
+//     $cityName = $user['city'] ?? null;
+//     if ($cityName) {
+//         $temperature = getTemperatureForCity($cityName);
+//         $user['temperature'] = $temperature;
+//     }
 
-    $params = ['user' => $user];
-    return $this->get('renderer')->render($response, 'users/show.phtml', $params);
-});
+//     $params = ['user' => $user];
+//     return $this->get('renderer')->render($response, 'users/show.phtml', $params);
+// });
 
 
 
@@ -206,5 +206,72 @@ $app->get('/users/{id}', function ($request, $response, $args) use ($users) {
 //     $response->getBody()->write(json_encode($result));
 //     return $response->withHeader('Content-Type', 'application/json');
 // });
+
+
+
+
+
+
+// Регистрация пользователей
+
+// $container = new Container();
+// $container->set('renderer', function () {
+//     return new \Slim\Views\PhpRenderer(__DIR__ . '/../templates');
+// });
+// $app = AppFactory::createFromContainer($container);
+// $app->addErrorMiddleware(true, true, true);
+
+// $app->get('/users/new', function ($request, $response) {
+//     $params = [
+//         'user' => ['nickname' => '', 'email' => ''],
+//         'errors' => []
+//     ];
+//     return $this->get('renderer')->render($response, "users/new.phtml", $params);
+// });
+
+// $app->post('/users', function ($request, $response) {
+//     $user = $request->getParsedBodyParam('user');
+//     $errors = [];
+  
+//     if (empty($user['nickname'])) {
+//         $errors['nickname'] = 'Nickname is required';
+//     }
+    
+//     if (empty($user['email'])) {
+//         $errors['email'] = 'Email is required';
+//     } elseif (!preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(ru|com)$/', $user['email'])) {
+//         $errors['email'] = 'Invalid email format';
+//     }
+    
+
+//     if (empty($errors)) {
+//         $user['id'] = uniqid();
+//         $filePath = 'data/users.json';
+//         $users = json_decode(file_get_contents($filePath), true) ?? [];
+//         $users[] = $user;
+//         file_put_contents($filePath, json_encode($users));
+//         return $response->withRedirect('/users', 302);
+//     }
+
+//     $params = [
+//         'user' => $user,
+//         'errors' => $errors
+//     ];
+//     return $this->get('renderer')->render($response, "users/new.phtml", $params);
+// });
+
+// $app->get('/users', function ($request, $response) {
+//     $filePath = 'data/users.json';
+//     $users = json_decode(file_get_contents($filePath), true) ?? [];
+//     $params = ['users' => $users];
+//     return $this->get('renderer')->render($response, "users/show.phtml", $params);
+// });
+
+
+
+
+
+
+
 
 $app->run();
