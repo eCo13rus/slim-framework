@@ -1,0 +1,25 @@
+<form action="{{ url_for('create_user') }}" method="post">
+  <div>
+    <label>
+        Nickname
+      <input type="text" name="user[nickname]" value="{{ user.nickname }}">
+    </label>
+    {% if errors.nickname is defined %}
+      <div>{{ errors.nickname }}</div>
+    {% endif %}
+  </div>
+  <div>
+    <label>
+        Email
+      <input type="email" required name="user[email]" value="{{ user.email }}">
+    </label>
+    {% if errors.email is defined %}
+      <div>{{ errors.email }}</div>
+    {% endif %}
+  </div>
+  <input type="submit" value="Sign Up">
+</form>
+
+
+
+

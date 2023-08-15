@@ -1,0 +1,12 @@
+{# users/show.twig #}
+<h1>User List</h1>
+<ul>
+    {% for user in users %}
+    <li>
+        Nickname: {{ user.nickname }}<br>
+        Email: {{ user.email }}<br>
+    </li>
+    <br> 
+    {% endfor %}
+</ul>
+<a href="{{ createUrl }}">Create New User</a>

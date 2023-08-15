@@ -23,7 +23,7 @@
 
 
 
-<h1>Добро пожаловать!</h1>
+<!-- <h1>Добро пожаловать!</h1>
 
 <p><a href="/users">Посмотреть список пользователей</a></p>
 <h1>Список пользователей</h1>
@@ -31,4 +31,21 @@
     <?php foreach ($users as $user): ?>
         <li><a href="/users/<?= $user['id'] ?>"><?= $user['id'] ?>. <?= $user['firstName'] ?> <?= $user['lastName'] ?></a></li>
     <?php endforeach ?>
+</ul> -->
+
+
+
+
+
+
+<h1>User List</h1>
+<ul>
+    <?php foreach ($users as $user): ?>
+    <li>
+        Nickname: <?= htmlspecialchars($user['nickname']) ?><br>
+        Email: <?= htmlspecialchars($user['email']) ?><br>
+    </li>
+    <br> 
+    <?php endforeach; ?>
 </ul>
+<a href="<?= $createUrl ?>">Create New User</a>

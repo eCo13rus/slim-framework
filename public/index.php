@@ -3,6 +3,8 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Slim\Factory\AppFactory;
+use Slim\Views\Twig;
+use Slim\Views\TwigMiddleware;
 use DI\Container;
 
 // Для Компаний
@@ -218,6 +220,7 @@ use DI\Container;
 // $container->set('renderer', function () {
 //     return new \Slim\Views\PhpRenderer(__DIR__ . '/../templates');
 // });
+
 // $app = AppFactory::createFromContainer($container);
 // $app->addErrorMiddleware(true, true, true);
 
@@ -243,7 +246,6 @@ use DI\Container;
 //         $errors['email'] = 'Invalid email format';
 //     }
     
-
 //     if (empty($errors)) {
 //         $user['id'] = uniqid();
 //         $filePath = 'data/users.json';
@@ -270,8 +272,70 @@ use DI\Container;
 
 
 
+// Вариант с использованием twig и именованные маршруты
+
+// $container = new Container();
+// $container->set('view', function() {
+//     return Twig::create(__DIR__ . '/../templates');
+// });
 
 
+// AppFactory::setContainer($container);
+// $app = AppFactory::create();
+// $app->addErrorMiddleware(true, true, true);
 
+// $app->add(TwigMiddleware::createFromContainer($app));
+
+
+// $app->get('/users/new', function ($request, $response, $args) {
+//     $params = [
+//         'user' => ['nickname' => '', 'email' => ''],
+//         'errors' => []
+//     ];
+//     return $this->get('view')->render($response, "users/new.twig", $params);
+// })->setName('new_user');
+
+
+// $app->get('/users', function ($request, $response, $args) use ($app) {
+//     $filePath = 'data/users.json';
+//     $users = json_decode(file_get_contents($filePath), true) ?? [];
+//     $createUrl = $app->getRouteCollector()->getRouteParser()->urlFor('new_user');
+//     $params = [
+//         'users' => $users, 
+//         'createUrl' => $createUrl
+//     ];
+//     return $this->get('view')->render($response, "users/show.twig", $params);
+// })->setName('list_users');
+
+
+// $app->post('/users', function ($request, $response, $args) {
+//     $user = $request->getParsedBodyParam('user');
+//     $errors = [];
+    
+//     if (empty($user['nickname'])) {
+//         $errors['nickname'] = 'Nickname is required';
+//     }
+    
+//     if (empty($user['email'])) {
+//         $errors['email'] = 'Email is required';
+//     } elseif (!preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(ru|com)$/', $user['email'])) {
+//         $errors['email'] = 'Invalid email format';
+//     }
+    
+//     if (empty($errors)) {
+//         $user['id'] = uniqid();
+//         $filePath = 'data/users.json';
+//         $users = json_decode(file_get_contents($filePath), true) ?? [];
+//         $users[] = $user;
+//         file_put_contents($filePath, json_encode($users));
+//         return $response->withRedirect('/users', 302);
+//     }
+
+//     $params = [
+//         'user' => $user,
+//         'errors' => $errors
+//     ];
+//     return $this->get('view')->render($response, "users/new.twig", $params);
+// })->setName('create_user');
 
 $app->run();
