@@ -1,4 +1,9 @@
-{# users/show.twig #}
+<div id="flash-message" class="alert alert-success" style="color: green; transition: all 1s; font-size: 20px; opacity: 1; height: auto; padding: 15px;">
+    {% if flash.success %}
+        {{ flash.success[0] }}
+    {% endif %}
+</div>
+
 <h1>User List</h1>
 <ul>
     {% for user in users %}
@@ -10,3 +15,17 @@
     {% endfor %}
 </ul>
 <a href="{{ createUrl }}">Create New User</a>
+
+
+<script>
+    setTimeout(function() {
+        var alertDiv = document.getElementById('flash-message');
+        if (alertDiv) {
+            alertDiv.style.opacity = '0';
+            alertDiv.style.height = '0';
+            alertDiv.style.padding = '0';
+        }
+    }, 5000); // Здесь 5000 миллисекунд, что равно 5 секундам
+</script>
+
+
