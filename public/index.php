@@ -77,10 +77,27 @@ use DI\Container;
 // ];
 
 
-// $app->get('/courses/{id}', function ($request, $response, array $args) {
+// $app->get('/courses/{id}', function ($request, $response, array $args) use ($courses) {
 //     $id = $args['id'];
-//     return $response->write("Courses id: {$id}");
+//     $course = null;
+//     foreach ($courses as $item) {
+//         if ($item['id'] == $id) {
+//             $course = $item;
+//             break;
+//         }
+//     }
+
+//     if ($course) {
+//         $response->getBody()->write(json_encode($course, JSON_UNESCAPED_UNICODE));
+//     } else {
+//         $response->getBody()->write("Course with id {$id} not found");
+//         return $response->withStatus(404);
+//     }
+
+//     return $response->withHeader('Content-Type', 'application/json');
 // });
+
+
 
 // $app->get('/courses', function ($request, $response) use ($courses) {
 //     $params = [
@@ -276,6 +293,8 @@ use DI\Container;
 
 
 
+
+
 // Вариант с использованием twig, именованные маршруты и поиск по id
 
 // $container = new Container();
@@ -372,74 +391,165 @@ use DI\Container;
 
 // Добавление Flash сообщения при регистрации
 
-session_start();
+// session_start();
 
-$container = new Container();
-$container->set('view', function() {
-    return Twig::create(__DIR__ . '/../templates');
-});
-$container->set('flash', function () {
-    return new \Slim\Flash\Messages();
-});
+// $container = new Container();
+// $container->set('view', function() {
+//     return Twig::create(__DIR__ . '/../templates');
+// });
+// $container->set('flash', function () {
+//     return new \Slim\Flash\Messages();
+// });
 
-AppFactory::setContainer($container);
-$app = AppFactory::create();
-$app->add(TwigMiddleware::createFromContainer($app));
+// AppFactory::setContainer($container);
+// $app = AppFactory::create();
+// $app->add(TwigMiddleware::createFromContainer($app));
 
-$app->get('/users/new', function ($request, $response) {
-    $params = [
-        'user' => ['nickname' => '', 'email' => ''],
-        'errors' => []
-    ];
-    return $this->get('view')->render($response, "users/new.twig", $params);
-})->setName('new_user');
+// $app->get('/users/new', function ($request, $response) {
+//     $params = [
+//         'user' => ['nickname' => '', 'email' => ''],
+//         'errors' => []
+//     ];
+//     return $this->get('view')->render($response, "users/new.twig", $params);
+// })->setName('new_user');
 
-$app->get('/users', function ($request, $response) use ($app) {
-    $filePath = 'data/users.json';
-    $users = json_decode(file_get_contents($filePath), true) ?? [];
-    $createUrl = $app->getRouteCollector()->getRouteParser()->urlFor('new_user');
-    $flashMessages = $app->getContainer()->get('flash')->getMessages();
+// $app->get('/users', function ($request, $response) use ($app) {
+//     $filePath = 'data/users.json';
+//     $users = json_decode(file_get_contents($filePath), true) ?? [];
+//     $createUrl = $app->getRouteCollector()->getRouteParser()->urlFor('new_user');
+//     $flashMessages = $app->getContainer()->get('flash')->getMessages();
 
-    $params = [
-        'users' => $users,
-        'createUrl' => $createUrl,
-        'flash' => $flashMessages
-    ];
+//     $params = [
+//         'users' => $users,
+//         'createUrl' => $createUrl,
+//         'flash' => $flashMessages
+//     ];
 
-    return $app->getContainer()->get('view')->render($response, "users/show.twig", $params);
-})->setName('list_users');
+//     return $app->getContainer()->get('view')->render($response, "users/show.twig", $params);
+// })->setName('list_users');
 
-$app->post('/users', function ($request, $response) {
-    $user = $request->getParsedBodyParam('user');
-    $errors = [];
+// $app->post('/users', function ($request, $response) {
+//     $user = $request->getParsedBodyParam('user');
+//     $errors = [];
     
-    if (empty($user['nickname'])) {
-        $errors['nickname'] = 'Nickname is required';
-    }
+//     if (empty($user['nickname'])) {
+//         $errors['nickname'] = 'Nickname is required';
+//     }
     
-    if (empty($user['email'])) {
-        $errors['email'] = 'Email is required';
-    } elseif (!preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(ru|com)$/', $user['email'])) {
-        $errors['email'] = 'Invalid email format';
-    }
+//     if (empty($user['email'])) {
+//         $errors['email'] = 'Email is required';
+//     } elseif (!preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(ru|com)$/', $user['email'])) {
+//         $errors['email'] = 'Invalid email format';
+//     }
     
-    if (empty($errors)) {
-        $user['id'] = uniqid();
-        $filePath = 'data/users.json';
-        $users = json_decode(file_get_contents($filePath), true) ?? [];
-        $users[] = $user;
-        $jsonData = json_encode($users, JSON_UNESCAPED_UNICODE);
-        file_put_contents($filePath, $jsonData);
-        $this->get('flash')->addMessage('success', 'Все заебись!');
-        return $response->withRedirect('/users', 302);
-    }
+//     if (empty($errors)) {
+//         $user['id'] = uniqid();
+//         $filePath = 'data/users.json';
+//         $users = json_decode(file_get_contents($filePath), true) ?? [];
+//         $users[] = $user;
+//         $jsonData = json_encode($users, JSON_UNESCAPED_UNICODE);
+//         file_put_contents($filePath, $jsonData);
+//         $this->get('flash')->addMessage('success', 'Все заебись!');
+//         return $response->withRedirect('/users', 302);
+//     }
 
-    $params = [
-        'user' => $user,
-        'errors' => $errors
-    ];
-    return $this->get('view')->render($response, "users/new.twig", $params);
-})->setName('create_user');
+//     $params = [
+//         'user' => $user,
+//         'errors' => $errors
+//     ];
+//     return $this->get('view')->render($response, "users/new.twig", $params);
+// })->setName('create_user');
 
 
-$app->run();
+
+
+
+
+
+// Данные пользователей берутся из файла по id
+
+// $container = new Container();
+// $container->set('renderer', function () {
+//     return new \Slim\Views\PhpRenderer(__DIR__ . '/../templates');
+// });
+
+// $app = AppFactory::createFromContainer($container);
+// $app->addErrorMiddleware(true, true, true);
+
+// $app->get('/users/new', function ($request, $response) {
+//     $params = [
+//         'user' => ['nickname' => '', 'email' => ''],
+//         'errors' => []
+//     ];
+//     return $this->get('renderer')->render($response, "users/new.phtml", $params);
+// })->setName('users.new');
+
+
+// $app->get('/users/{id}', function ($request, $response, array $args) use ($app) {
+//     $id = $args['id'];
+//     $filePath = 'data/users.json';
+//     $users = json_decode(file_get_contents($filePath), true) ?? [];
+
+//     $user = array_filter($users, function ($user) use ($id) {
+//         return $user['id'] == $id;
+//     });
+
+//     if (empty($user)) {
+//         return $response->write('User not found')->withStatus(404);
+//     }
+
+//     $user = array_shift($user);
+//     $routeParser = $app->getRouteCollector()->getRouteParser();
+//     $params = ['user' => $user, 'routeParser' => $routeParser];
+//     return $this->get('renderer')->render($response, "users/show_user.phtml", $params);
+// })->setName('users.show');
+
+
+// $app->post('/users', function ($request, $response) {
+//     $user = $request->getParsedBodyParam('user');
+//     $errors = [];
+
+//     if (empty($user['nickname'])) {
+//         $errors['nickname'] = 'Nickname is required';
+//     }
+
+//     if (empty($user['email'])) {
+//         $errors['email'] = 'Email is required';
+//     } elseif (!preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(ru|com)$/', $user['email'])) {
+//         $errors['email'] = 'Invalid email format';
+//     }
+
+//     if (empty($errors)) {
+//         $user['id'] = uniqid();
+//         $filePath = 'data/users.json';
+//         $users = json_decode(file_get_contents($filePath), true) ?? [];
+//         $users[] = $user;
+//         file_put_contents($filePath, json_encode($users));
+//         return $response->withRedirect('/users', 302);
+//     }
+
+//     $params = [
+//         'user' => $user,
+//         'errors' => $errors
+//     ];
+//     return $this->get('renderer')->render($response, "users/new.phtml", $params);
+// })->setName('users.create');
+
+
+// $app->get('/users', function ($request, $response) use ($app) {
+//     $filePath = 'data/users.json';
+//     $users = json_decode(file_get_contents($filePath), true) ?? [];
+//     $routeParser = $app->getRouteCollector()->getRouteParser();
+//     $createUrl = $routeParser->urlFor('users.new');
+//     $params = ['users' => $users, 'createUrl' => $createUrl, 'routeParser' => $routeParser];
+//     return $this->get('renderer')->render($response, "users/show.phtml", $params);
+// })->setName('users.index');
+
+
+
+
+
+
+
+
+$app->run(); 

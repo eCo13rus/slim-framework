@@ -38,17 +38,22 @@
 
 
 
-<h1>User List</h1>
+<h1>Список пользователей</h1>
 <ul>
     <?php foreach ($users as $user): ?>
     <li>
-        Nickname: <?= htmlspecialchars($user['nickname']) ?><br>
-        Email: <?= htmlspecialchars($user['email']) ?><br>
+        Имя: <a href="<?= $routeParser->urlFor('users.show', ['id' => $user['id']]) ?>"><?= htmlspecialchars($user['nickname']) ?></a><br>
+        
     </li>
     <br> 
     <?php endforeach; ?>
 </ul>
-<a href="<?= $createUrl ?>">Create New User</a>
+<a href="<?= $createUrl ?>">Регистрация нового пользователя</a>
+
+
+
+
+
 
 
 
