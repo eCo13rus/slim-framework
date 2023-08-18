@@ -1,0 +1,10 @@
+<body>
+    <h1>Вы действительно хотите удалить профиль?</h1>
+    <form action="/users/<?= $user['id'] ?>" method="post">
+        <input type="hidden" name="_METHOD" value="DELETE">
+        <button type="submit">Да, удалить</button>
+    </form>
+    <a href="<?= $routeParser->urlFor('users.show', ['id' => $user['id']]) ?>">Нет, назад</a>
+</body>
+</html>
+

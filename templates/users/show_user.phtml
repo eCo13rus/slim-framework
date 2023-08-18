@@ -1,4 +1,9 @@
 <h1>Профиль пользователя</h1>
 <p>Nickname: <?= htmlspecialchars($user['nickname']) ?></p>
 <p>Email: <?= htmlspecialchars($user['email']) ?></p>
-<a href="<?= $routeParser->urlFor('users.index') ?>">Назад к списку пользователей</a>
+<a href="<?= $routeParser->urlFor('users.edit', ['id' => $user['id']]) ?>">Редактировать профиль</a><br>
+<br>
+<a href="<?= $routeParser->urlFor('users.delete', ['id' => $user['id']]) ?>">Удалить профиль</a><br>
+<br>
+<a href="/users">Назад к списку пользователей</a>
+

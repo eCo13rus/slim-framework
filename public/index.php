@@ -6,6 +6,8 @@ use Slim\Factory\AppFactory;
 use Slim\Views\Twig;
 use Slim\Views\TwigMiddleware;
 use DI\Container;
+use Slim\Middleware\MethodOverrideMiddleware;
+
 
 // Для Компаний
 
@@ -468,87 +470,190 @@ use DI\Container;
 
 // Данные пользователей берутся из файла по id
 
-// $container = new Container();
-// $container->set('renderer', function () {
-//     return new \Slim\Views\PhpRenderer(__DIR__ . '/../templates');
-// });
+// Создание и настройка контейнера и приложения
+$container = new Container();
+$container->set('renderer', function () {
+    return new \Slim\Views\PhpRenderer(__DIR__ . '/../templates');
+});
 
-// $app = AppFactory::createFromContainer($container);
-// $app->addErrorMiddleware(true, true, true);
-
-// $app->get('/users/new', function ($request, $response) {
-//     $params = [
-//         'user' => ['nickname' => '', 'email' => ''],
-//         'errors' => []
-//     ];
-//     return $this->get('renderer')->render($response, "users/new.phtml", $params);
-// })->setName('users.new');
+$app = AppFactory::createFromContainer($container);
+$app->add(MethodOverrideMiddleware::class);
+$app->addErrorMiddleware(true, true, true);
 
 
-// $app->get('/users/{id}', function ($request, $response, array $args) use ($app) {
-//     $id = $args['id'];
-//     $filePath = 'data/users.json';
-//     $users = json_decode(file_get_contents($filePath), true) ?? [];
-
-//     $user = array_filter($users, function ($user) use ($id) {
-//         return $user['id'] == $id;
-//     });
-
-//     if (empty($user)) {
-//         return $response->write('User not found')->withStatus(404);
-//     }
-
-//     $user = array_shift($user);
-//     $routeParser = $app->getRouteCollector()->getRouteParser();
-//     $params = ['user' => $user, 'routeParser' => $routeParser];
-//     return $this->get('renderer')->render($response, "users/show_user.phtml", $params);
-// })->setName('users.show');
+// Обработчик отображения формы для создания нового пользователя
+$app->get('/users/new', function ($request, $response) {
+    $params = [
+        'user' => ['nickname' => '', 'email' => ''],
+        'errors' => []
+    ];
+    return $this->get('renderer')->render($response, "users/new.phtml", $params);
+})->setName('users.new');
 
 
-// $app->post('/users', function ($request, $response) {
-//     $user = $request->getParsedBodyParam('user');
-//     $errors = [];
+// Обработчик создания нового пользователя
+$app->post('/users', function ($request, $response) {
+    $user = $request->getParsedBodyParam('user');
+    $errors = [];
 
-//     if (empty($user['nickname'])) {
-//         $errors['nickname'] = 'Nickname is required';
-//     }
+    if (empty($user['nickname'])) {
+        $errors['nickname'] = 'Nickname is required';
+    }
 
-//     if (empty($user['email'])) {
-//         $errors['email'] = 'Email is required';
-//     } elseif (!preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(ru|com)$/', $user['email'])) {
-//         $errors['email'] = 'Invalid email format';
-//     }
+    if (empty($user['email'])) {
+        $errors['email'] = 'Email is required';
+    } elseif (!preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(ru|com)$/', $user['email'])) {
+        $errors['email'] = 'Invalid email format';
+    }
 
-//     if (empty($errors)) {
-//         $user['id'] = uniqid();
-//         $filePath = 'data/users.json';
-//         $users = json_decode(file_get_contents($filePath), true) ?? [];
-//         $users[] = $user;
-//         file_put_contents($filePath, json_encode($users));
-//         return $response->withRedirect('/users', 302);
-//     }
+    if (empty($errors)) {
+        $user['id'] = uniqid();
+        $filePath = 'data/users.json';
+        $users = json_decode(file_get_contents($filePath), true) ?? [];
+        $users[] = $user;
+        file_put_contents($filePath, json_encode($users));
+        return $response->withRedirect('/users', 302);
+    }
 
-//     $params = [
-//         'user' => $user,
-//         'errors' => $errors
-//     ];
-//     return $this->get('renderer')->render($response, "users/new.phtml", $params);
-// })->setName('users.create');
-
-
-// $app->get('/users', function ($request, $response) use ($app) {
-//     $filePath = 'data/users.json';
-//     $users = json_decode(file_get_contents($filePath), true) ?? [];
-//     $routeParser = $app->getRouteCollector()->getRouteParser();
-//     $createUrl = $routeParser->urlFor('users.new');
-//     $params = ['users' => $users, 'createUrl' => $createUrl, 'routeParser' => $routeParser];
-//     return $this->get('renderer')->render($response, "users/show.phtml", $params);
-// })->setName('users.index');
+    $params = [
+        'user' => $user,
+        'errors' => $errors
+    ];
+    return $this->get('renderer')->render($response, "users/new.phtml", $params);
+})->setName('users.create');
 
 
+// Обработчик для отображения списка всех пользователей
+$app->get('/users', function ($request, $response) use ($app) {
+    $filePath = 'data/users.json';
+    $users = json_decode(file_get_contents($filePath), true) ?? [];
+    $routeParser = $app->getRouteCollector()->getRouteParser();
+    $createUrl = $routeParser->urlFor('users.new');
+    $params = ['users' => $users, 'createUrl' => $createUrl, 'routeParser' => $routeParser];
+    return $this->get('renderer')->render($response, "users/show.phtml", $params);
+})->setName('users.index');
+
+
+// Обработчик для отображения формы редактирования пользователя
+$app->get('/users/{id}/edit', function ($request, $response, array $args) {
+    $id = $args['id'];
+    $filePath = 'data/users.json';
+    $users = json_decode(file_get_contents($filePath), true) ?? [];
+
+    $user = array_filter($users, function ($user) use ($id) {
+        return $user['id'] == $id;
+    });
+
+    if (empty($user)) {
+        return $response->write('User not found')->withStatus(404);
+    }
+
+    $user = array_shift($user);
+    $params = ['user' => $user, 'errors' => []];
+    return $this->get('renderer')->render($response, "users/edit.phtml", $params);
+})->setName('users.edit');
 
 
 
+// Обработчик для отображения профиля конкретного пользователя
+$app->get('/users/{id}', function ($request, $response, array $args) use ($app) {
+    $id = $args['id'];
+    $filePath = 'data/users.json';
+    $users = json_decode(file_get_contents($filePath), true) ?? [];
+
+    $user = array_filter($users, function ($user) use ($id) {
+        return $user['id'] == $id;
+    });
+
+    if (empty($user)) {
+        return $response->write('User not found')->withStatus(404);
+    }
+
+    $user = array_shift($user);
+    $routeParser = $app->getRouteCollector()->getRouteParser();
+    $params = ['user' => $user, 'routeParser' => $routeParser];
+    return $this->get('renderer')->render($response, "users/show_user.phtml", $params);
+})->setName('users.show');
+
+
+// Обработчик для обновления данных пользователя
+$app->patch('/users/{id}', function ($request, $response, array $args) {
+    $id = $args['id'];
+    $filePath = 'data/users.json';
+    $users = json_decode(file_get_contents($filePath), true) ?? [];
+    $userKey = array_search($id, array_column($users, 'id'));
+
+    if ($userKey === false) {
+        return $response->write('User not found')->withStatus(404);
+    }
+
+    $userData = $request->getParsedBodyParam('user');
+    $errors = [];
+
+    if (empty($userData['nickname'])) {
+        $errors['nickname'] = 'Nickname is required';
+    }
+
+    if (empty($userData['email'])) {
+        $errors['email'] = 'Email is required';
+    } elseif (!preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(ru|com)$/', $userData['email'])) {
+        $errors['email'] = 'Invalid email format';
+    }
+
+    if (count($errors) === 0) {
+        $users[$userKey]['nickname'] = $userData['nickname'];
+        $users[$userKey]['email'] = $userData['email'];
+
+        file_put_contents($filePath, json_encode($users));
+        return $response->withRedirect('/users', 302);
+    }
+
+    $params = [
+        'user' => $userData,
+        'errors' => $errors
+    ];
+    return $this->get('renderer')->render($response, "users/edit.phtml", $params);
+})->setName('users.update');
+
+
+// Обработчик отображения страницы подтверждения удаления пользователя
+$app->get('/users/{id}/delete', function ($request, $response, array $args) use ($app) {
+    $id = $args['id'];
+    $filePath = 'data/users.json';
+    $users = json_decode(file_get_contents($filePath), true) ?? [];
+
+    $user = array_filter($users, function ($user) use ($id) {
+        return $user['id'] == $id;
+    });
+
+    if (empty($user)) {
+        return $response->write('User not found')->withStatus(404);
+    }
+
+    $user = array_shift($user);
+    $routeParser = $app->getRouteCollector()->getRouteParser();
+    $params = ['user' => $user, 'routeParser' => $routeParser];
+    return $this->get('renderer')->render($response, "users/delete.phtml", $params);
+})->setName('users.delete');
+
+
+
+// Обработчик удаления пользователя
+$app->delete('/users/{id}', function ($request, $response, array $args) {
+    $id = $args['id'];
+    $filePath = 'data/users.json';
+    $users = json_decode(file_get_contents($filePath), true) ?? [];
+    $userKey = array_search($id, array_column($users, 'id'));
+
+    if ($userKey === false) {
+        return $response->write('User not found')->withStatus(404);
+    }
+
+    unset($users[$userKey]);
+    file_put_contents($filePath, json_encode($users));
+
+    return $response->withRedirect('/users', 302);
+})->setName('users.delete');
 
 
 
