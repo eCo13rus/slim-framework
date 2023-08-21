@@ -1,13 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Живой Поиск</title>
-</head>
-<body>
-    <a href="/users">Все Пользователи</a>
+    <!-- <a href="/users">Все Пользователи</a>
     <br>
     <br>
     <input type="text" id="searchTerm" placeholder="Поиск по имени">
@@ -34,10 +25,46 @@
         });
     </script>
 </body>
-</html>
+</html> -->
 
 
 
 
+
+
+<!-- <?php if ($email): ?>
+    <div>Welcome, <?= htmlspecialchars($email)?></div><br>
+    <form action="/logout" method="post">
+        <input type="submit" value="Logout">
+    </form>
+<?php else: ?>
+    <form action="/login" method="post">
+        <input type="text" name="email" placeholder="Email">
+        <input type="submit" value="Login">
+    </form>
+<?php endif ?> -->
+
+
+
+
+
+
+
+
+<?php if ($currentUser): ?>
+    <div>Welcome, <?= htmlspecialchars($currentUser) ?></div><br>
+    <form action="/session" method="post">
+        <input type="hidden" name="_METHOD" value="DELETE">
+        <input type="submit" value="Sign Out">
+    </form>
+<?php else: ?>
+    <form action="/session" method="post">
+        <label for="name">Name</label>
+        <input type="text" name="user[name]" id="name">
+        <label for="password">Password</label>
+        <input type="password" name="user[password]" id="password">
+        <input type="submit" value="Sign In">
+    </form>
+<?php endif ?>
 
 
