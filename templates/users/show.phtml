@@ -1,5 +1,5 @@
-<!-- <h2>ID: <?= htmlspecialchars($id) ?></h2>
-<h2>Nickname: <?= htmlspecialchars($nickname) ?></h2>
+ <!-- <h2>ID: <?= htmlspecialchars($id) ?></h2>
+<h2>Nickname: <?= htmlspecialchars($nickname) ?></h2> -->
 
 
 
@@ -14,9 +14,9 @@
 <p>Фамилия: <?= $user['lastName'] ?></p>
 <p>Email: <?= $user['email'] ?></p>
 <p>Город: <?= $user['city'] ?></p>
-<?php if (isset($user['temperature'])): ?>
+<?php if (isset($user['temperature'])) : ?>
     <p>Температура в городе: <?= $user['temperature'] ?>°C</p>
-<?php endif; ?> -->
+<?php endif; ?>
 
 
 
@@ -28,35 +28,24 @@
 <p><a href="/users">Посмотреть список пользователей</a></p>
 <h1>Список пользователей</h1>
 <ul>
-    <?php foreach ($users as $user): ?>
+    <?php foreach ($users as $user) : ?>
         <li><a href="/users/<?= $user['id'] ?>"><?= $user['id'] ?>. <?= $user['firstName'] ?> <?= $user['lastName'] ?></a></li>
     <?php endforeach ?>
-</ul> -->
+</ul>  -->
 
 
 
 
 
 
-<h1>Список пользователей</h1>
+<!-- <h1>Список пользователей</h1>
 <ul>
-    <?php foreach ($users as $user): ?>
-    <li>
-        Имя: <a href="<?= $routeParser->urlFor('users.show', ['id' => $user['id']]) ?>"><?= htmlspecialchars($user['nickname']) ?></a><br>
-        
-    </li>
-    <br> 
+    <?php foreach ($users as $user) : ?>
+        <li>
+            Имя: <a href="<?= $routeParser->urlFor('users.show', ['id' => $user['id']]) ?>"><?= htmlspecialchars($user['nickname']) ?></a><br>
+
+        </li>
+        <br>
     <?php endforeach; ?>
 </ul>
-<a href="<?= $createUrl ?>">Регистрация нового пользователя</a>
-
-
-
-
-
-
-
-
-
-
-
+<a href="<?= $createUrl ?>">Регистрация нового пользователя</a> -->

@@ -1,12 +1,16 @@
-    <!-- <a href="/users">Все Пользователи</a>
-    <br>
-    <br>
-    <input type="text" id="searchTerm" placeholder="Поиск по имени">
-    <ul id="userList">
-        <?php foreach ($users as $user): ?>
-            <li><?= htmlspecialchars($user['firstName']) ?></li>
-        <?php endforeach ?>
-    </ul>
+    <a href="/users">Все Пользователи</a>
+<br>
+<br>
+<input type="text" id="searchTerm" placeholder="Поиск по имени">
+<ul id="userList">
+    <?php foreach ($users as $user) : ?>
+        <li>
+            <a href="/users/<?= $user['id'] ?>">
+                <?= htmlspecialchars($user['firstName']) ?>
+            </a>
+        </li>
+    <?php endforeach ?>
+</ul>
 
     <script>
         document.getElementById('searchTerm').addEventListener('input', function(e) {
@@ -24,25 +28,6 @@
                 });
         });
     </script>
-</body>
-</html> -->
-
-
-
-
-
-
-<!-- <?php if ($email): ?>
-    <div>Welcome, <?= htmlspecialchars($email)?></div><br>
-    <form action="/logout" method="post">
-        <input type="submit" value="Logout">
-    </form>
-<?php else: ?>
-    <form action="/login" method="post">
-        <input type="text" name="email" placeholder="Email">
-        <input type="submit" value="Login">
-    </form>
-<?php endif ?> -->
 
 
 
@@ -50,21 +35,37 @@
 
 
 
-
-<?php if ($currentUser): ?>
-    <div>Welcome, <?= htmlspecialchars($currentUser) ?></div><br>
-    <form action="/session" method="post">
-        <input type="hidden" name="_METHOD" value="DELETE">
-        <input type="submit" value="Sign Out">
-    </form>
-<?php else: ?>
-    <form action="/session" method="post">
-        <label for="name">Name</label>
-        <input type="text" name="user[name]" id="name">
-        <label for="password">Password</label>
-        <input type="password" name="user[password]" id="password">
-        <input type="submit" value="Sign In">
-    </form>
-<?php endif ?>
+    <!-- <?php if ($email) : ?>
+        <div>Welcome, <?= htmlspecialchars($email) ?></div><br>
+        <form action="/logout" method="post">
+            <input type="submit" value="Logout">
+        </form>
+    <?php else : ?>
+        <form action="/login" method="post">
+            <input type="text" name="email" placeholder="Email">
+            <input type="submit" value="Login">
+        </form>
+    <?php endif ?> -->
 
 
+
+
+
+
+
+
+    <!-- <?php if ($currentUser) : ?>
+        <div>Welcome, <?= htmlspecialchars($currentUser) ?></div><br>
+        <form action="/session" method="post">
+            <input type="hidden" name="_METHOD" value="DELETE">
+            <input type="submit" value="Sign Out">
+        </form>
+    <?php else : ?>
+        <form action="/session" method="post">
+            <label for="name">Name</label>
+            <input type="text" name="user[name]" id="name">
+            <label for="password">Password</label>
+            <input type="password" name="user[password]" id="password">
+            <input type="submit" value="Sign In">
+        </form>
+    <?php endif ?> -->
